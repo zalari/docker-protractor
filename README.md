@@ -1,2 +1,2 @@
-# docker-protractor
-Protractor with headless Chrome and Firefox.
+# docker-protractor-chrome
+Protractor with headless Chrome, inspired by [jciolek/docker-protractor-headless](jciolek/docker-protractor-headless).
