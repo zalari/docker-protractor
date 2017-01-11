@@ -3,12 +3,12 @@ MAINTAINER david.enke@zalari.de
 WORKDIR /tmp
 # install browser
 RUN apt-get update && \
-    apt-get install -y --force-yes wget && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-    apt-get update && \
-    apt-get install -y --force-yes google-chrome-stable && \
-    apt-get clean
+    apt-get install -y --force-yes xvfb openjdk-7-jre && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg --unpack google-chrome-stable_current_amd64.deb && \
+    apt-get install -f -y && \
+    apt-get clean && \
+    rm google-chrome-stable_current_amd64.deb
 # install node dependencies
 RUN npm install -g protractor protractor-screenshot-reporter mocha mocha-multi mocha-proshot chai chai-as-promised
 RUN webdriver-manager update
