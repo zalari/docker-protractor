@@ -1,22 +1,30 @@
-FROM node:slim
+FROM node:6.2-slim
 MAINTAINER david.enke@zalari.de
 WORKDIR /tmp
-# install browser
-RUN apt-get update && \
-    apt-get install -y --force-yes xvfb openjdk-7-jre && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    dpkg --unpack google-chrome-stable_current_amd64.deb && \
-    apt-get install -f -y && \
-    apt-get clean && \
-    rm google-chrome-stable_current_amd64.deb
 # install node dependencies
-RUN npm install -g protractor protractor-screenshot-reporter mocha mocha-multi mocha-proshot chai chai-as-promised
+RUN npm install -g \
+    chai \
+    chai-as-promised \
+    jasmine \
+    mocha \
+    mocha-multi \
+    mocha-proshot \
+    protractor \
+    protractor-screenshot-reporter
 RUN webdriver-manager update
-RUN mkdir /protractor
+# install browser
+RUN apt-get update && apt-get install -y --force-yes \
+    openjdk-7-jre \
+    xvfb
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN dpkg --unpack google-chrome-stable_current_amd64.deb
+RUN apt-get install -f -y &&  apt-get clean
+RUN rm google-chrome-stable_current_amd64.deb
 # copy startup script
 COPY ./protractor.sh /protractor.sh
 # Fix for the issue with Selenium, as described here:
 # https://github.com/SeleniumHQ/docker-selenium/issues/87
 ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
+RUN mkdir /protractor
 WORKDIR /protractor
 ENTRYPOINT ["/protractor.sh"]
